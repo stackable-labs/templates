@@ -1,11 +1,11 @@
 # Stackable Templates
 
-Project templates for the [Stackable](https://stackable.com) extension platform.
+Project templates for [Stackable Labs](https://stackablelabs.com/) cli.
 
 ## Templates
 
 | Template | Description | Usage |
-|---|---|---|
+|----|---|---|
 | [app-extension](./app-extension) | Full-stack extension starter with preview host | `npx @stackable-labs/create-extension my-extension` |
 
 ## Usage
