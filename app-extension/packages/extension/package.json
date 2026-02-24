@@ -1,0 +1,25 @@
+{
+  "name": "replace-with-extension-package-name",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@stackable-labs/sdk-extension-react": "latest",
+    "@stackable-labs/sdk-extension-contracts": "latest",
+    "react": "18.x",
+    "react-dom": "18.x"
+  },
+  "devDependencies": {
+    "@types/node": "22.x",
+    "@types/react": "18.x",
+    "@types/react-dom": "18.x",
+    "typescript": "5.x",
+    "vite": "6.x",
+    "@vitejs/plugin-react": "4.x"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "replace-with-extension-name",
+  "packageManager": "pnpm@9.15.4",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev"
+  },
+  "devDependencies": {
+    "turbo": "latest"
+  }
+}

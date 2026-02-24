@@ -1,0 +1,22 @@
+{
+  "name": "local-preview-host",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@stackable-labs/sdk-extension-host": "latest",
+    "@stackable-labs/sdk-extension-contracts": "latest",
+    "@stackable-labs/embeddables": "latest",
+    "react": "18.x",
+    "react-dom": "18.x"
+  },
+  "devDependencies": {
+    "@types/react": "18.x",
+    "@types/react-dom": "18.x",
+    "@vitejs/plugin-react": "4.x",
+    "typescript": "5.x",
+    "vite": "6.x"
+  }
+}
