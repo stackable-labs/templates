@@ -5,6 +5,7 @@ dist/
 *.tsbuildinfo
 .env.*.local
 .env.local
+.env.stackable
 .DS_Store
 yarn.lock
 package-lock.json

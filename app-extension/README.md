@@ -1,6 +1,6 @@
 # Stackable Extension
 
-A [Stackable Labs](https://stackablelabs.com/) extension project scaffolded with `@stackable-labs/create-extension`.
+A [Stackable Labs](https://stackablelabs.com/) extension project scaffolded with [`@stackable-labs/cli-app-extension`](https://www.npmjs.com/package/@stackable-labs/cli-app-extension).
 
 ## Project Structure
 
