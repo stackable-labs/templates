@@ -54,9 +54,45 @@ See the [CLI docs](https://www.npmjs.com/package/@stackable-labs/cli-app-extensi
 
 ## Configuration
 
-- **`manifest.json`** — Extension metadata, targets, and permissions
+- **`manifest.json`** — Extension metadata, targets, permissions, and allowed domains
 - **`.env`** — Development server ports
 - **`turbo.json`** — Turborepo task orchestration
+
+### manifest.json fields
+
+- **`permissions`** — Capability permissions required by your extension. Include `"data:fetch"` if you call `capabilities.data.fetch(...)`.
+- **`allowedDomains`** — Hostname allowlist for `data.fetch` egress, e.g. `["api.myservice.com"]`.
+  - Use hostnames only (no protocol/path).
+  - Default is an empty array (`[]`), which allows no external fetch targets.
+
+Example:
+
+```json
+{
+  "name": "My Extension",
+  "version": "1.0.0",
+  "targets": ["slot.header", "slot.content"],
+  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke"],
+  "allowedDomains": ["api.myservice.com"]
+}
+```
+
+### data.fetch usage
+
+```tsx
+const { data } = useCapabilities()
+
+const result = await data.fetch({
+  url: 'https://api.myservice.com/orders/123',
+  method: 'GET',
+})
+
+if (result.ok) {
+  console.log(result.data)
+}
+```
+
+Security model: `data.fetch` requests are sent through the platform proxy, which validates the target URL hostname against your extension's `allowedDomains`. Authentication for your backend is owned by the extension developer (for example, by attaching your own auth headers/tokens).
 
 ## Learn More
 
