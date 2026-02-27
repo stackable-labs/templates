@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     envDir: '../../',
     server: {
-      port: parseInt(env.VITE_PREVIEW_PORT || '5174', 10),
+      port: parseInt(env.VITE_PREVIEW_PORT || '6544', 10),
     },
   }
 })

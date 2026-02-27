@@ -20,7 +20,7 @@ const extensions: ExtensionRegistryEntry[] = [
   {
     id: manifest.name.toLowerCase().replace(/\s+/g, '-'),
     manifest,
-    bundleUrl: `http://localhost:${import.meta.env.VITE_EXTENSION_PORT || '5173'}`,
+    bundleUrl: `http://localhost:${import.meta.env.VITE_EXTENSION_PORT || '6543'}`,
     enabled: true,
   },
 ]

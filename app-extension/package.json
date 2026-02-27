@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "turbo run dev"
+    "dev": "turbo run dev",
+    "preview": "pnpm dlx @stackable-labs/cli-app-extension@latest dev"
   },
   "devDependencies": {
     "turbo": "latest"
