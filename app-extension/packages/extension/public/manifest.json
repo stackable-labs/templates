@@ -2,5 +2,6 @@
   "name": "__EXTENSION_DISPLAY_NAME__",
   "version": "1.0.0",
   "targets": ["__TARGETS__"],
-  "permissions": ["__PERMISSIONS__"]
+  "permissions": ["__PERMISSIONS__"],
+  "allowedDomains": []
 }

@@ -4,6 +4,8 @@ import { hostComponents } from '@stackable-labs/embeddables/components'
 import type {
   ActionInvokePayload,
   ApiRequest,
+  FetchRequest,
+  FetchResponse,
   ExtensionRegistryEntry,
   Permission,
   ToastPayload,
@@ -33,6 +35,26 @@ const mockContext = {
 const capabilityHandlers: CapabilityHandlers = {
   'data.query': async (_payload: ApiRequest) => {
     return mockData
+  },
+  'data.fetch': async (_extensionId: string, payload: FetchRequest): Promise<FetchResponse> => {
+    const response = await fetch(payload.url, {
+      method: payload.method ?? 'GET',
+      headers: payload.headers,
+      ...(payload.body !== undefined ? { body: JSON.stringify(payload.body) } : {}),
+    })
+    const text = await response.text()
+    let data: unknown = null
+    try {
+      data = text ? JSON.parse(text) : null
+    } catch {
+      data = text
+    }
+
+    return {
+      status: response.status,
+      ok: response.ok,
+      data,
+    }
   },
   'actions.toast': async (payload: ToastPayload) => {
     console.log('[Preview] toast:', payload)
