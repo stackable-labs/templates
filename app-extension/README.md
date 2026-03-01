@@ -82,10 +82,19 @@ Example:
 ```tsx
 const { data } = useCapabilities()
 
-const result = await data.fetch({
-  url: 'https://api.myservice.com/orders/123',
-  method: 'GET',
+const result = await data.fetch('https://api.myservice.com/orders/123', {
+  method: 'POST',
+  body: { limit: 10 },
 })
+
+if (result.ok) {
+  console.log(result.data)
+}
+```
+```tsx
+const { data } = useCapabilities()
+
+const result = await data.fetch('https://api.myservice.com/orders/123')
 
 if (result.ok) {
   console.log(result.data)
