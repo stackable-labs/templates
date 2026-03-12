@@ -9,3 +9,17 @@ dist/
 .DS_Store
 yarn.lock
 package-lock.json
+
+.rulesync/
+# Generated AI editor config (produced by generate:docs, published via CI)
+.claude/
+.cursor/
+.windsurf/
+.github/instructions/
+.github/copilot-instructions.md
+.gemini/
+.agent/
+.codex/
+CLAUDE.md
+GEMINI.md
+AGENTS.md
