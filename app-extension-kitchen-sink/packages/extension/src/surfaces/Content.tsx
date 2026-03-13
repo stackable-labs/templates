@@ -1,10 +1,16 @@
-import { ui, Surface, useStore, useContextData, useCapabilities } from '@stackable-labs/sdk-extension-react'
+import { ui, Surface, useContextData, useCapabilities, useStore } from '@stackable-labs/sdk-extension-react'
 import { appStore } from '../store'
 
 export function Content() {
-  const viewState = useStore(appStore, (s) => s.viewState)
   const { loading } = useContextData()
   const { data, actions } = useCapabilities()
+  const name = useStore(appStore, (s) => s.name)
+  const dietaryNotes = useStore(appStore, (s) => s.dietaryNotes)
+  const occasion = useStore(appStore, (s) => s.occasion)
+  const partySize = useStore(appStore, (s) => s.partySize)
+  const time = useStore(appStore, (s) => s.time)
+  const waitlist = useStore(appStore, (s) => s.waitlist)
+  const seating = useStore(appStore, (s) => s.seating)
 
   if (loading) {
     return (
@@ -18,23 +24,58 @@ export function Content() {
     )
   }
 
-  const handleFetchExample = async () => {
-    const result = await data.fetch('https://jsonplaceholder.typicode.com/todos/1')
-    actions.toast({ message: `Fetched with status ${result.status}. The proxy works!`, type: 'success' })
+  const handleFetchGet = async () => {
+    try {
+      const result = await data.fetch('https://jsonplaceholder.typicode.com/todos/1')
+      actions.toast({ message: `GET returned status ${result.status}. The proxy works!`, type: 'success' })
+    } catch {
+      actions.toast({ message: 'data.fetch GET demo — requires the data:fetch permission in the host.', type: 'info' })
+    }
+  }
+
+  const handleFetchPost = async () => {
+    try {
+      const result = await data.fetch('https://jsonplaceholder.typicode.com/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: { title: 'Another round', body: 'From the kitchen sink', userId: 1 },
+      })
+      actions.toast({ message: `POST returned status ${result.status}. The proxy works!`, type: 'success' })
+    } catch {
+      actions.toast({ message: 'data.fetch POST demo — requires the data:fetch permission in the host.', type: 'info' })
+    }
+  }
+
+  const handleReservation = async () => {
+    const state = appStore.get()
+    try {
+      const result = await data.fetch('https://jsonplaceholder.typicode.com/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: state,
+      })
+      actions.toast({ message: `Reservation confirmed (status ${result.status}) — party of ${state.partySize} at ${state.time}. See you there!`, type: 'success' })
+    } catch {
+      actions.toast({ message: `Reservation placed — party of ${state.partySize} at ${state.time}. The kitchen sink sends its regards.`, type: 'success' })
+    }
   }
 
   const handleInvokeExample = async () => {
-    await actions.invoke('kitchen.serve', { dish: 'the works', sides: ['toast', 'invoke'] })
-    actions.toast({ message: 'Chef fired actions.invoke AND actions.toast in one go. Two capabilities, one click.', type: 'success' })
+    try {
+      await actions.invoke('newConversation', { source: 'kitchen-sink-demo' })
+      actions.toast({ message: 'Chef fired actions.invoke AND actions.toast in one go. Two capabilities, one click.', type: 'success' })
+    } catch {
+      actions.toast({ message: 'actions.invoke demo — the host would handle this action in production.', type: 'info' })
+    }
   }
 
   return (
     <Surface id="slot.content">
       <ui.Tabs defaultValue="menu">
-        <ui.TabsList>
-          <ui.TabsTrigger value="menu">Today's Specials</ui.TabsTrigger>
-          <ui.TabsTrigger value="details">The Full Spread</ui.TabsTrigger>
-          <ui.TabsTrigger value="form">Place Your Order</ui.TabsTrigger>
+        <ui.TabsList className="mx-auto">
+          <ui.TabsTrigger value="menu">Specials</ui.TabsTrigger>
+          <ui.TabsTrigger value="details">"The Spread"</ui.TabsTrigger>
+          <ui.TabsTrigger value="form">Next Rez</ui.TabsTrigger>
         </ui.TabsList>
 
         <ui.TabsContent value="menu">
@@ -42,8 +83,8 @@ export function Content() {
             <ui.MenuItem
               icon="shopping-bag"
               label="See What's Cooking"
-              description="The full spread — cards, badges, progress bars, alerts... everything but the fridge"
-              onClick={() => appStore.set({ viewState: { type: 'details' } })}
+              description="Le full on — cards, badges, bars, alerts...everything but the fridge"
+              onClick={() => actions.toast({ message: 'Chef says: check out "The Spread" tab for the full tasting menu!', type: 'info' })}
             />
             <ui.MenuItem
               icon="message-square"
@@ -54,123 +95,166 @@ export function Content() {
             <ui.MenuItem
               icon="package"
               label="Order Takeout"
-              description="data.fetch — send a real HTTP request through the proxy. Yes, to the actual internet."
-              onClick={handleFetchExample}
+              description="data.fetch — send a secure HTTP request...to the moon!"
+              onClick={handleFetchGet}
             />
           </ui.Menu>
+          <ui.Stack direction="column" gap="2" className="pt-3">
+            <ui.Alert variant="destructive">
+              <ui.Text>Fire in the kitchen! (Relax — just showing off the destructive alert.)</ui.Text>
+            </ui.Alert>
+          </ui.Stack>
         </ui.TabsContent>
 
         <ui.TabsContent value="details">
-          <ui.ScrollArea className="h-64">
-            <ui.Stack direction="column" gap="3">
-              <ui.Card>
-                <ui.CardHeader>
-                  <ui.Heading level="3">Chef's Tasting Menu</ui.Heading>
-                </ui.CardHeader>
-                <ui.CardContent>
-                  <ui.Stack direction="column" gap="2">
-                    <ui.Inline gap="2">
-                      <ui.Text className="font-medium">Kitchen Status:</ui.Text>
-                      <ui.Badge variant="default">Fully Stocked</ui.Badge>
-                    </ui.Inline>
-                    <ui.Separator />
-                    <ui.Text tone="muted">Every UI component in the SDK, plated and ready to serve. If something's missing, send it back to the kitchen.</ui.Text>
-                    <ui.Progress value="100" />
-                    <ui.Text className="text-xs" tone="muted">100% of components served (chef counted twice)</ui.Text>
+          <ui.Stack direction="column" gap="3">
+            <ui.Card>
+              <ui.CardHeader>
+                <ui.Heading level="3">Chef's Tasting Menu</ui.Heading>
+              </ui.CardHeader>
+              <ui.CardContent className="pb-6">
+                <ui.Stack direction="column" gap="3">
+                  <ui.Inline gap="2">
+                    <ui.Text className="font-medium">Next Course:</ui.Text>
+                    <ui.Badge variant="secondary" hue="blue">Seared Widgets</ui.Badge>
+                  </ui.Inline>
+                  <ui.Separator />
+                  <ui.Text tone="muted">Every UI component in the SDK, plated and ready to serve. If something's missing, send it back to the kitchen.</ui.Text>
+                  <ui.Stack direction="column" gap="1">
+                    <ui.Progress value="68" />
+                    <ui.Text className="text-xs" tone="muted">68% of courses served — dessert is still in the oven</ui.Text>
                   </ui.Stack>
-                </ui.CardContent>
-              </ui.Card>
+                </ui.Stack>
+              </ui.CardContent>
+            </ui.Card>
 
-              <ui.Alert variant="default">
-                <ui.Text>Your table is ready. Also, this is an alert component. We're alerting you about that.</ui.Text>
-              </ui.Alert>
+            <ui.Alert variant="default">
+              <ui.Text>Your next course is almost ready — get those utensils moving!</ui.Text>
+            </ui.Alert>
 
-              <ui.Alert variant="destructive">
-                <ui.Text>Fire in the kitchen! (Just kidding. But this destructive alert variant does look serious, doesn't it?)</ui.Text>
-              </ui.Alert>
+            <ui.Collapsible>
+              <ui.CollapsibleTrigger>
+                Save room for dessert?
+              </ui.CollapsibleTrigger>
+              <ui.CollapsibleContent>
+                <ui.Card>
+                  <ui.CardContent>
+                    <ui.Text tone="muted">
+                      Of course there's dessert. This is the kitchen sink — we have everything.
+                      You're looking at a Card nested inside a Collapsible. It's components all the way down — turtles wish they had this kind of nesting.
+                    </ui.Text>
+                  </ui.CardContent>
+                </ui.Card>
+              </ui.CollapsibleContent>
+            </ui.Collapsible>
 
-              <ui.Collapsible>
-                <ui.CollapsibleTrigger className="text-sm font-medium underline-offset-4 hover:underline">
-                  Save room for dessert?
-                </ui.CollapsibleTrigger>
-                <ui.CollapsibleContent>
-                  <ui.Card>
-                    <ui.CardContent>
-                      <ui.Text tone="muted">
-                        Of course there's dessert. This is the kitchen sink — we have everything.
-                        You're currently looking at a Card nested inside a Collapsible inside a ScrollArea.
-                        That's three layers of component. Like a trifle.
-                      </ui.Text>
-                    </ui.CardContent>
-                  </ui.Card>
-                </ui.CollapsibleContent>
-              </ui.Collapsible>
+            <ui.Inline gap="2" className="justify-end">
+              <ui.Button variant="outline" onClick={handleInvokeExample}>
+                Add a Round
+              </ui.Button>
+              <ui.Button variant="destructive" onClick={handleFetchPost}>
+                Bring da Check
+              </ui.Button>
+            </ui.Inline>
 
-              <ui.Inline gap="2">
-                <ui.Button variant="outline" onClick={() => appStore.set({ viewState: { type: 'menu' } })}>
-                  Back to Specials
-                </ui.Button>
-                <ui.Button onClick={handleFetchExample}>
-                  Another Round
-                </ui.Button>
-              </ui.Inline>
-
-              <ui.Link href="https://docs.stackablelabs.io">Full Recipe Book (SDK Docs)</ui.Link>
-            </ui.Stack>
-          </ui.ScrollArea>
+          </ui.Stack>
         </ui.TabsContent>
 
         <ui.TabsContent value="form">
           <ui.Stack direction="column" gap="3">
-            <ui.Stack direction="column" gap="1">
-              <ui.Label htmlFor="name-input">Name for the Reservation</ui.Label>
-              <ui.Input id="name-input" placeholder="Chef Extension" />
-            </ui.Stack>
+            <ui.ScrollArea className="h-64 rounded-lg border bg-background">
+              <ui.Stack direction="column" gap="3" className="p-3">
+                <ui.Stack direction="column" gap="1">
+                  <ui.Label htmlFor="name-input">Name</ui.Label>
+                  <ui.Input id="name-input" placeholder="Party of one extension" value={name} onChange={(e) => appStore.set({ name: e.target.value })} />
+                </ui.Stack>
 
-            <ui.Stack direction="column" gap="1">
-              <ui.Label htmlFor="description">Special Requests</ui.Label>
-              <ui.Textarea id="description" placeholder="No substitutions — this kitchen has everything already..." />
-            </ui.Stack>
+                <ui.Stack direction="column" gap="1">
+                  <ui.Label htmlFor="notes">Allergies or Dietary Notes</ui.Label>
+                  <ui.Textarea id="notes" placeholder="No JSON, no YAML, absolutely no TOML..." value={dietaryNotes} onChange={(e) => appStore.set({ dietaryNotes: e.target.value })} />
+                </ui.Stack>
 
-            <ui.Stack direction="column" gap="1">
-              <ui.Label>Pick Your Course</ui.Label>
-              <ui.Select defaultValue="tasting">
-                <ui.SelectOption value="tasting">Tasting Menu (all of them)</ui.SelectOption>
-                <ui.SelectOption value="appetizer">Appetizer (just the Cards)</ui.SelectOption>
-                <ui.SelectOption value="surprise">Chef's Surprise (Collapsible)</ui.SelectOption>
-              </ui.Select>
-            </ui.Stack>
+                <ui.Stack direction="column" gap="1">
+                  <ui.Label>Occasion</ui.Label>
+                  <ui.Select value={occasion} onChange={(e) => appStore.set({ occasion: e.target.value })}>
+                    <ui.SelectOption value="none">None</ui.SelectOption>
+                    <ui.SelectOption value="meeting">Meeting</ui.SelectOption>
+                    <ui.SelectOption value="birthday">Birthday</ui.SelectOption>
+                    <ui.SelectOption value="anniversary">Anniversary</ui.SelectOption>
+                    <ui.SelectOption value="date-night">Date Night</ui.SelectOption>
+                    <ui.SelectOption value="survived-prod">Survived a Production Deploy</ui.SelectOption>
+                  </ui.Select>
+                </ui.Stack>
 
-            <ui.Inline gap="4">
-              <ui.Checkbox id="acknowledge" />
-              <ui.Label htmlFor="acknowledge">I understand the chef put everything on this plate</ui.Label>
-            </ui.Inline>
+                <ui.Stack direction="column" gap="1">
+                  <ui.Label>Party Size</ui.Label>
+                  <ui.Inline gap="1">
+                    {['1', '2', '4', '6', '8+'].map((size) => (
+                      <ui.Button
+                        key={size}
+                        size="sm"
+                        variant={partySize === size ? 'default' : 'outline'}
+                        onClick={() => appStore.set({ partySize: size })}
+                      >
+                        {size}
+                      </ui.Button>
+                    ))}
+                  </ui.Inline>
+                </ui.Stack>
 
-            <ui.Inline gap="4">
-              <ui.Switch id="second-helpings" />
-              <ui.Label htmlFor="second-helpings">Second helpings (there's always room)</ui.Label>
-            </ui.Inline>
+                <ui.Stack direction="column" gap="1">
+                  <ui.Label>Time</ui.Label>
+                  <ui.Inline gap="1">
+                    {['5:30', '6:00', '7:00', '7:30', '8:30'].map((t) => (
+                      <ui.Button
+                        key={t}
+                        size="sm"
+                        variant={time === t ? 'default' : 'outline'}
+                        onClick={() => appStore.set({ time: t })}
+                      >
+                        {t}
+                      </ui.Button>
+                    ))}
+                  </ui.Inline>
+                </ui.Stack>
 
-            <ui.Stack direction="column" gap="1">
-              <ui.Label>How was everything?</ui.Label>
-              <ui.RadioGroup defaultValue="compliments">
-                <ui.RadioGroupItem value="compliments" />
-                <ui.Label>Compliments to the chef</ui.Label>
-                <ui.RadioGroupItem value="standing-ovation" />
-                <ui.Label>Standing ovation</ui.Label>
-                <ui.RadioGroupItem value="michelin" />
-                <ui.Label>Michelin star material</ui.Label>
-              </ui.RadioGroup>
-            </ui.Stack>
+                <ui.Inline gap="4">
+                  <ui.Switch id="waitlist" checked={waitlist} onChange={(e) => appStore.set({ waitlist: e.target.value === 'true' })} />
+                  <ui.Label htmlFor="waitlist">Add me to the waitlist if full</ui.Label>
+                </ui.Inline>
 
-            <ui.Inline gap="2">
-              <ui.Button variant="outline" onClick={() => actions.toast({ message: 'The kitchen never closes. Come back anytime.', type: 'info' })}>
-                Ask for the Check
+                <ui.Stack direction="column" gap="1">
+                  <ui.Label>Seating Preference</ui.Label>
+                  <ui.RadioGroup value={seating} onChange={(e) => appStore.set({ seating: e.target.value })}>
+                    <ui.Inline gap="2">
+                      <ui.RadioGroupItem value="indoor" id="indoor" />
+                      <ui.Label htmlFor="indoor">Indoor</ui.Label>
+                    </ui.Inline>
+                    <ui.Inline gap="2">
+                      <ui.RadioGroupItem value="patio" id="patio" />
+                      <ui.Label htmlFor="patio">Patio</ui.Label>
+                    </ui.Inline>
+                    <ui.Inline gap="2">
+                      <ui.RadioGroupItem value="chefs-counter" id="chefs-counter" />
+                      <ui.Label htmlFor="chefs-counter">Chef's Lap</ui.Label>
+                    </ui.Inline>
+                  </ui.RadioGroup>
+                </ui.Stack>
+              </ui.Stack>
+            </ui.ScrollArea>
+
+            <ui.Inline gap="2" className="justify-end">
+              <ui.Button onClick={handleReservation}>
+                Lock it In
               </ui.Button>
-              <ui.Button onClick={() => actions.toast({ message: 'The kitchen sink sends its regards.', type: 'success' })}>
-                Send it to the Kitchen
-              </ui.Button>
             </ui.Inline>
+
+            <ui.Link href="https://docs.stackablelabs.io" className="text-xs pt-3">
+              <ui.Inline gap="1">
+                <ui.Icon name="book-open" size="sm" />
+                Allergen/Recipe Details
+              </ui.Inline>
+            </ui.Link>
           </ui.Stack>
         </ui.TabsContent>
       </ui.Tabs>

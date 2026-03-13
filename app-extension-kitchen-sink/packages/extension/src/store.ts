@@ -1,14 +1,21 @@
 import { createStore } from '@stackable-labs/sdk-extension-react'
 
-export type ViewState =
-  | { type: 'menu' }
-  | { type: 'details' }
-  | { type: 'form' }
-
 export interface AppState {
-  viewState: ViewState
+  name?: string
+  dietaryNotes?: string
+  occasion?: string
+  partySize: string
+  time: string
+  waitlist?: boolean
+  seating?: string
 }
 
 export const appStore = createStore<AppState>({
-  viewState: { type: 'menu' },
+  name: '',
+  dietaryNotes: '',
+  occasion: 'none',
+  partySize: '2',
+  time: '7:00',
+  waitlist: false,
+  seating: 'indoor',
 })
