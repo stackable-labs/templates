@@ -1,0 +1,12 @@
+{
+  "orders": [
+    { "id": "ord_001", "status": "fulfilled", "total": 99.99, "date": "2026-01-15" },
+    { "id": "ord_002", "status": "pending", "total": 149.50, "date": "2026-02-01" }
+  ],
+  "customer": {
+    "id": "cust_preview_123",
+    "email": "preview@example.com",
+    "name": "Jane Doe",
+    "tier": "premium"
+  }
+}
