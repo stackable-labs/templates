@@ -1,0 +1,13 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "tasks": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  },
+  "globalEnv": [
+    "VITE_EXTENSION_PORT",
+    "VITE_PREVIEW_PORT"
+  ]
+}
