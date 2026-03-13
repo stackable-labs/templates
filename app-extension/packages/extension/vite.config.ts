@@ -12,10 +12,7 @@ export default defineConfig(({ mode }) => {
       lib: {
         entry: 'src/index.tsx',
         formats: ['es'],
-        fileName: 'extension',
-      },
-      rollupOptions: {
-        // bundle everything into a single file
+        fileName: () => 'extension.js',
       },
     },
     envDir: '../../',
