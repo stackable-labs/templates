@@ -90,8 +90,8 @@ export function Content() {
               </ui.Alert>
 
               <ui.Collapsible>
-                <ui.CollapsibleTrigger>
-                  <ui.Button variant="outline" size="sm">Save room for dessert?</ui.Button>
+                <ui.CollapsibleTrigger className="text-sm font-medium underline-offset-4 hover:underline">
+                  Save room for dessert?
                 </ui.CollapsibleTrigger>
                 <ui.CollapsibleContent>
                   <ui.Card>
@@ -154,18 +154,12 @@ export function Content() {
             <ui.Stack direction="column" gap="1">
               <ui.Label>How was everything?</ui.Label>
               <ui.RadioGroup defaultValue="compliments">
-                <ui.Inline gap="2">
-                  <ui.RadioGroupItem value="compliments" />
-                  <ui.Label>Compliments to the chef</ui.Label>
-                </ui.Inline>
-                <ui.Inline gap="2">
-                  <ui.RadioGroupItem value="standing-ovation" />
-                  <ui.Label>Standing ovation</ui.Label>
-                </ui.Inline>
-                <ui.Inline gap="2">
-                  <ui.RadioGroupItem value="michelin" />
-                  <ui.Label>Michelin star material</ui.Label>
-                </ui.Inline>
+                <ui.RadioGroupItem value="compliments" />
+                <ui.Label>Compliments to the chef</ui.Label>
+                <ui.RadioGroupItem value="standing-ovation" />
+                <ui.Label>Standing ovation</ui.Label>
+                <ui.RadioGroupItem value="michelin" />
+                <ui.Label>Michelin star material</ui.Label>
               </ui.RadioGroup>
             </ui.Stack>
 
