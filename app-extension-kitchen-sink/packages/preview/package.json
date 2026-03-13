@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite"
+    "dev": "sleep 2 && vite"
   },
   "dependencies": {
     "@stackable-labs/sdk-extension-host": "latest",
