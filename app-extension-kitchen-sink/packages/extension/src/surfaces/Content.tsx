@@ -28,7 +28,7 @@ export function Content() {
   const handleFetchGet = async () => {
     try {
       const result = await data.fetch('https://jsonplaceholder.typicode.com/todos/1')
-      actions.toast({ message: `GET returned status ${result.status}. The proxy works!`, type: 'success' })
+      actions.toast({ message: `GET returned status ${result.status}. The proxy works!`, type: 'success', position: 'top-center', closeButton: true })
     } catch {
       actions.toast({ message: 'data.fetch GET demo — requires the data:fetch permission in the host.', type: 'info' })
     }
