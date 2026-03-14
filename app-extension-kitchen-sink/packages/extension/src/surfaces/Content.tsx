@@ -11,6 +11,7 @@ export function Content() {
   const time = useStore(appStore, (s) => s.time)
   const waitlist = useStore(appStore, (s) => s.waitlist)
   const seating = useStore(appStore, (s) => s.seating)
+  const billTotal = useStore(appStore, (s) => s.billTotal)
 
   if (loading) {
     return (
@@ -33,37 +34,48 @@ export function Content() {
     }
   }
 
+  const handleAddRound = () => {
+    const newTotal = appStore.get().billTotal + 30
+    appStore.set({ billTotal: newTotal })
+    handleInvokeExample()
+  }
+
   const handleFetchPost = async () => {
+    const total = appStore.get().billTotal
     try {
       const result = await data.fetch('https://jsonplaceholder.typicode.com/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: { title: 'Another round', body: 'From the kitchen sink', userId: 1 },
       })
-      actions.toast({ message: `POST returned status ${result.status}. The proxy works!`, type: 'success' })
+      actions.toast({ message: `POST returned status ${result.status}. The proxy works!`, description: `Your total: $${total || 0}. Gratuity not included.`, type: 'success', position: 'top-center', closeButton: true })
     } catch {
-      actions.toast({ message: 'data.fetch POST demo — requires the data:fetch permission in the host.', type: 'info' })
+      actions.toast({ message: 'Check is on the way!', description: `Your total: $${total || 0}. Gratuity not included.`, type: 'success', position: 'top-center', closeButton: true })
     }
   }
 
-  const handleReservation = async () => {
+  const handleReservation = () => {
     const state = appStore.get()
-    try {
-      const result = await data.fetch('https://jsonplaceholder.typicode.com/posts', {
+    actions.toast({
+      fetch: {
+        url: 'https://jsonplaceholder.typicode.com/posts',
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: state,
-      })
-      actions.toast({ message: `Reservation confirmed (status ${result.status}) — party of ${state.partySize} at ${state.time}. See you there!`, type: 'success' })
-    } catch {
-      actions.toast({ message: `Reservation placed — party of ${state.partySize} at ${state.time}. The kitchen sink sends its regards.`, type: 'success' })
-    }
+      },
+      message: 'Reservation',
+      loading: `Placing reservation for ${state.name || state.time}...`,
+      success: `Reservation confirmed! Party of ${state.partySize} at ${state.time}. See you there!`,
+      error: 'Reservation failed — the kitchen is overwhelmed. Try again!',
+      position: 'top-center',
+      closeButton: true,
+    })
   }
 
   const handleInvokeExample = async () => {
     try {
       await actions.invoke('newConversation', { source: 'kitchen-sink-demo' })
-      actions.toast({ message: 'Chef fired actions.invoke AND actions.toast in one go. Two capabilities, one click.', type: 'success' })
+      actions.toast({ message: 'Chef fired actions.invoke AND actions.toast in one go. Two capabilities, one click...$30 straight to the head.', type: 'success' })
     } catch {
       actions.toast({ message: 'actions.invoke demo — the host would handle this action in production.', type: 'info' })
     }
@@ -110,7 +122,10 @@ export function Content() {
           <ui.Stack direction="column" gap="3">
             <ui.Card>
               <ui.CardHeader>
-                <ui.Heading level="3">Chef's Tasting Menu</ui.Heading>
+                <ui.Inline gap="2" className="justify-between">
+                  <ui.Heading level="3">Chef's Tasting Menu</ui.Heading>
+                  <ui.Badge variant="secondary">${billTotal}</ui.Badge>
+                </ui.Inline>
               </ui.CardHeader>
               <ui.CardContent className="pb-6">
                 <ui.Stack direction="column" gap="3">
@@ -149,7 +164,7 @@ export function Content() {
             </ui.Collapsible>
 
             <ui.Inline gap="2" className="justify-end">
-              <ui.Button variant="outline" onClick={handleInvokeExample}>
+              <ui.Button variant="outline" onClick={handleAddRound}>
                 Add a Round
               </ui.Button>
               <ui.Button variant="destructive" onClick={handleFetchPost}>

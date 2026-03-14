@@ -8,6 +8,7 @@ export interface AppState {
   time: string
   waitlist?: boolean
   seating?: string
+  billTotal: number
 }
 
 export const appStore = createStore<AppState>({
@@ -18,4 +19,5 @@ export const appStore = createStore<AppState>({
   time: '7:00',
   waitlist: false,
   seating: 'indoor',
+  billTotal: 300,
 })
