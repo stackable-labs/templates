@@ -7,9 +7,6 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
-    // Workaround: @agnostack/verifyd references Node.js `global` in browser.
-    // Remove once verifyd ships browser-safe conditional exports (STA-28).
-    define: { global: 'globalThis' },
     build: {
       outDir: 'dist',
       lib: {
