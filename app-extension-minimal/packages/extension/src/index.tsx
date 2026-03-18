@@ -1,7 +1,6 @@
 import { createExtension } from '@stackable-labs/sdk-extension-react'
 import { Content } from './surfaces/Content'
 
-createExtension(
-  () => <Content />,
-  { extensionId: '__EXTENSION_ID__' },
-)
+const Extension = () => <Content />
+
+createExtension(() => <Extension />, { extensionId: '__EXTENSION_ID__' })
