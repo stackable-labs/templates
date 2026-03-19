@@ -52,6 +52,22 @@ Runs the full CLI dev experience — starts Vite dev servers, opens Cloudflare t
 
 See the [CLI docs](https://www.npmjs.com/package/@stackable-labs/cli-app-extension) for details.
 
+## AI Agent Skills
+
+This project includes [Agent Skills](https://agentskills.io) — SDK reference and guided workflows that AI coding assistants (Claude Code, Cursor, Windsurf, and 40+ others) can use to help you build extensions.
+
+Skills are included automatically when you scaffold a new project. To update them to the latest version:
+
+```bash
+pnpm dlx skills add stackable-labs/skills
+```
+
+For platform-specific AI editor configs (`.claude/`, `.cursor/`, `.windsurf/`, etc.):
+
+```bash
+pnpm dlx @stackable-labs/cli-app-extension ai scaffold
+```
+
 ## Configuration
 
 - **`manifest.json`** — Extension metadata, targets, permissions, and allowed domains
