@@ -11,7 +11,8 @@ yarn.lock
 package-lock.json
 
 .rulesync/
-# Generated AI editor config (produced by generate:docs, published via CI)
+# Generated AI editor config + skills (produced by generate:docs, published via CI)
+skills/
 .claude/
 .cursor/
 .windsurf/
