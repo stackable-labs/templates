@@ -62,7 +62,7 @@ pnpm dlx skills add stackable-labs/skills
 For platform-specific AI editor configs (`.claude/`, `.cursor/`, `.windsurf/`, etc.):
 
 ```bash
-pnpm dlx @stackable-labs/cli-app-extension ai scaffold
+pnpm --config.dlx-cache-max-age=0 dlx @stackable-labs/cli-app-extension ai scaffold
 ```
 
 ## Configuration
