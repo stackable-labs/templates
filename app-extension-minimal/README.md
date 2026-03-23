@@ -2,7 +2,7 @@
 
 A bare-bones [Stackable Labs](https://stackablelabs.com/) extension with a single content surface. The lightest starting point for building an extension.
 
-Scaffolded by `npx @stackable-labs/cli-app-extension create --template minimal`
+Scaffolded by `pnpm --config.dlx-cache-max-age=0 dlx @stackable-labs/cli-app-extension create --template minimal`
 
 ## Project Structure
 
@@ -66,7 +66,7 @@ pnpm dlx skills add stackable-labs/skills
 For platform-specific AI editor configs (`.claude/`, `.cursor/`, `.windsurf/`, etc.):
 
 ```bash
-pnpm dlx @stackable-labs/cli-app-extension ai scaffold
+pnpm --config.dlx-cache-max-age=0 dlx @stackable-labs/cli-app-extension ai scaffold
 ```
 
 ## Configuration
