@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "turbo run dev",
-    "preview": "pnpm dlx @stackable-labs/cli-app-extension@latest dev"
+    "preview": "pnpm --config.dlx-cache-max-age=0 dlx @stackable-labs/cli-app-extension@latest dev"
   },
   "devDependencies": {
     "turbo": "latest"
