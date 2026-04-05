@@ -6,6 +6,7 @@ import type {
   ApiRequest,
   FetchRequest,
   FetchResponse,
+  EventType,
   ExtensionRegistryEntry,
   Permission,
   ToastPayload,
@@ -16,6 +17,7 @@ import mockData from './mockData.json'
 const manifest = {
   ...manifestRaw,
   permissions: manifestRaw.permissions as Permission[],
+  events: manifestRaw.events as EventType[],
 }
 
 const extensions: ExtensionRegistryEntry[] = [

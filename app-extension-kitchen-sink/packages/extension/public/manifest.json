@@ -2,6 +2,7 @@
   "name": "__EXTENSION_DISPLAY_NAME__",
   "version": "1.0.0",
   "targets": ["slot.header", "slot.content", "slot.footer", "slot.footer-links"],
-  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke"],
+  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke", "events:identity", "extend:identity"],
+  "events": ["identity.login", "identity.logout"],
   "allowedDomains": ["jsonplaceholder.typicode.com"]
 }

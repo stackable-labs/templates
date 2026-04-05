@@ -95,9 +95,52 @@ For platform-specific AI editor configs (`.claude/`, `.cursor/`, `.windsurf/`, e
 pnpm --config.dlx-cache-max-age=0 dlx @stackable-labs/cli-app-extension ai scaffold
 ```
 
+## Identity
+
+The kitchen-sink template demonstrates both identity capabilities in `index.tsx`:
+
+### Identity Events (`events:identity`)
+
+Subscribe to real-time identity events pushed from the host platform. Requires `events:identity` permission and matching entries in the manifest `events` array.
+
+```tsx
+import { useIdentityEvent } from '@stackable-labs/sdk-extension-react'
+
+useIdentityEvent('identity.login', (event) => {
+  console.log('User logged in:', event.state.user?.email)
+})
+
+useIdentityEvent('identity.logout', () => {
+  console.log('User logged out')
+})
+```
+
+Event types: `identity.login`, `identity.logout`, `identity.refresh`, `identity.expired`
+
+### Identity Enrichment (`extend:identity`)
+
+Enrich JWT claims before the host signs the identity token. Requires `extend:identity` permission.
+
+```tsx
+import { useIdentityExtend } from '@stackable-labs/sdk-extension-react'
+
+useIdentityExtend((claims) => ({
+  external_id: `demo_${claims.external_id}`,
+}))
+```
+
+### Identity via Context
+
+Identity state is also available in the `context.read()` response as an `identity` field (requires `context:read`, no separate permission):
+
+```tsx
+const context = await capabilities.context.read()
+// context.identity → { authenticated, user, expiresAt? }
+```
+
 ## SDK Capabilities
 
-All 5 capabilities are used and declared in `manifest.json`:
+All capabilities are used and declared in `manifest.json`:
 
 | Permission | Capability | Where Used |
 |---|---|---|
@@ -106,14 +149,18 @@ All 5 capabilities are used and declared in `manifest.json`:
 | `data:fetch` | `data.fetch(url, init?)` | Order Takeout (GET), Bring da Check (POST), Lock it In (POST with form state) |
 | `actions:toast` | `actions.toast(payload)` | Multiple buttons — success, info variants |
 | `actions:invoke` | `actions.invoke(action, payload?)` | Ring the Service Bell, Add a Round (`newConversation`) |
+| `events:identity` | `useIdentityEvent(type, handler)` | Entry point — logs login/logout events |
+| `extend:identity` | `useIdentityExtend(handler)` | Entry point — enriches JWT claims |
 
 ## SDK Hooks
 
 | Hook | Where Used |
 |---|---|
 | `useContextData()` | Header + Content — provides `loading` flag and context data |
-| `useCapabilities()` | Content — returns `{ data, actions }` for calling capabilities |
+| `useCapabilities()` | Content — returns `{ data, actions, extend }` for calling capabilities |
 | `useStore(store, selector)` | Content — subscribes to `appStore` slices for controlled form fields |
+| `useIdentityEvent(type, handler)` | Entry point — subscribes to identity login/logout events |
+| `useIdentityExtend(handler)` | Entry point — enriches identity JWT claims before signing |
 
 ## Shared State
 
