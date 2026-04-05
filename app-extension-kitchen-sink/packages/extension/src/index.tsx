@@ -1,4 +1,4 @@
-import { createExtension, useIdentityEvent, useIdentityExtend } from '@stackable-labs/sdk-extension-react'
+import { createExtension, useIdentityEvent, useExtendIdentity, useMessagingEvent } from '@stackable-labs/sdk-extension-react'
 import { Header } from './surfaces/Header'
 import { Content } from './surfaces/Content'
 import { Footer } from './surfaces/Footer'
@@ -13,8 +13,13 @@ const Extension = () => {
     console.log('[kitchen-sink] User logged out')
   })
 
+  // Messaging events — react to postback button clicks
+  useMessagingEvent('postback:add_to_cart', (event) => {
+    console.log('[kitchen-sink] Postback:', event.actionName, event.conversationId)
+  })
+
   // Identity enrichment — add claims to the JWT before signing
-  useIdentityExtend((claims) => ({
+  useExtendIdentity((claims) => ({
     external_id: `demo_${claims.external_id}`,
     reservation_status: 'permanent_dishwasher',
     chef_rating: 'cant_boil_water',

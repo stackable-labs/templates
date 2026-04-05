@@ -122,9 +122,9 @@ Event types: `identity.login`, `identity.logout`, `identity.refresh`, `identity.
 Enrich JWT claims before the host signs the identity token. Requires `extend:identity` permission.
 
 ```tsx
-import { useIdentityExtend } from '@stackable-labs/sdk-extension-react'
+import { useExtendIdentity } from '@stackable-labs/sdk-extension-react'
 
-useIdentityExtend((claims) => ({
+useExtendIdentity((claims) => ({
   external_id: `demo_${claims.external_id}`,
 }))
 ```
@@ -138,6 +138,22 @@ const context = await capabilities.context.read()
 // context.identity → { authenticated, user, expiresAt? }
 ```
 
+## Messaging
+
+### Messaging Events (`events:messaging`)
+
+Subscribe to messaging events (e.g. postback button clicks from Zendesk bots). Requires `events:messaging` permission and matching entries in the manifest `events` array.
+
+```tsx
+import { useMessagingEvent } from '@stackable-labs/sdk-extension-react'
+
+useMessagingEvent('postback:add_to_cart', (event) => {
+  console.log('Postback:', event.actionName, event.conversationId)
+})
+```
+
+Event subscription types: `'postback'` (all postbacks, requires elevated review) or `'postback:<actionName>'` (specific postback).
+
 ## SDK Capabilities
 
 All capabilities are used and declared in `manifest.json`:
@@ -149,8 +165,9 @@ All capabilities are used and declared in `manifest.json`:
 | `data:fetch` | `data.fetch(url, init?)` | Order Takeout (GET), Bring da Check (POST), Lock it In (POST with form state) |
 | `actions:toast` | `actions.toast(payload)` | Multiple buttons — success, info variants |
 | `actions:invoke` | `actions.invoke(action, payload?)` | Ring the Service Bell, Add a Round (`newConversation`) |
-| `events:identity` | `useIdentityEvent(type, handler)` | Entry point — logs login/logout events |
 | `extend:identity` | `useIdentityExtend(handler)` | Entry point — enriches JWT claims |
+| `events:identity` | `useIdentityEvent(type, handler)` | Entry point — logs login/logout events |
+| `events:messaging` | `useMessagingEvent(type, handler)` | Entry point — logs postback button clicks |
 
 ## SDK Hooks
 
@@ -159,8 +176,9 @@ All capabilities are used and declared in `manifest.json`:
 | `useContextData()` | Header + Content — provides `loading` flag and context data |
 | `useCapabilities()` | Content — returns `{ data, actions, extend }` for calling capabilities |
 | `useStore(store, selector)` | Content — subscribes to `appStore` slices for controlled form fields |
+| `useExtendIdentity(handler)` | Entry point — enriches identity JWT claims before signing |
 | `useIdentityEvent(type, handler)` | Entry point — subscribes to identity login/logout events |
-| `useIdentityExtend(handler)` | Entry point — enriches identity JWT claims before signing |
+| `useMessagingEvent(type, handler)` | Entry point — subscribes to messaging postback events |
 
 ## Shared State
 
