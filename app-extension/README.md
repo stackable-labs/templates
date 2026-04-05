@@ -146,6 +146,19 @@ useExtendIdentity((claims) => ({
 }))
 ```
 
+For memoized handlers (e.g. with `useCallback`), import the `ExtendIdentityHandler` type:
+
+```tsx
+import { useCallback } from 'react'
+import { useExtendIdentity } from '@stackable-labs/sdk-extension-react'
+import type { ExtendIdentityHandler } from '@stackable-labs/sdk-extension-contracts'
+
+const handleExtend = useCallback<ExtendIdentityHandler>((claims) => ({
+  external_id: `custom_${claims.external_id}`,
+}), [])
+useExtendIdentity(handleExtend)
+```
+
 ### Identity via Context
 
 Identity state is available in the `context.read()` response as an `identity` field (requires `context:read`, no separate permission):
@@ -167,6 +180,19 @@ import { useMessagingEvent } from '@stackable-labs/sdk-extension-react'
 useMessagingEvent('postback:add_to_cart', (event) => {
   console.log('Postback:', event.actionName, event.conversationId)
 })
+```
+
+For memoized handlers, import the `MessagingEventHandler` type:
+
+```tsx
+import { useCallback } from 'react'
+import { useMessagingEvent } from '@stackable-labs/sdk-extension-react'
+import type { MessagingEventHandler } from '@stackable-labs/sdk-extension-contracts'
+
+const handlePostback = useCallback<MessagingEventHandler>((event) => {
+  console.log('Postback:', event.actionName, event.conversationId)
+}, [])
+useMessagingEvent('postback:add_to_cart', handlePostback)
 ```
 
 Subscription types: `'postback'` (all postbacks, requires elevated review) or `'postback:<actionName>'` (specific postback).
