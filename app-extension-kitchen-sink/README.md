@@ -129,6 +129,19 @@ useExtendIdentity((claims) => ({
 }))
 ```
 
+For memoized handlers (e.g. with `useCallback`), import the `ExtendIdentityHandler` type:
+
+```tsx
+import { useCallback } from 'react'
+import { useExtendIdentity } from '@stackable-labs/sdk-extension-react'
+import type { ExtendIdentityHandler } from '@stackable-labs/sdk-extension-contracts'
+
+const handleExtend = useCallback<ExtendIdentityHandler>((claims) => ({
+  external_id: `demo_${claims.external_id}`,
+}), [])
+useExtendIdentity(handleExtend)
+```
+
 ### Identity via Context
 
 Identity state is also available in the `context.read()` response as an `identity` field (requires `context:read`, no separate permission):
@@ -152,6 +165,19 @@ useMessagingEvent('postback:add_to_cart', (event) => {
 })
 ```
 
+For memoized handlers, import the `MessagingEventHandler` type:
+
+```tsx
+import { useCallback } from 'react'
+import { useMessagingEvent } from '@stackable-labs/sdk-extension-react'
+import type { MessagingEventHandler } from '@stackable-labs/sdk-extension-contracts'
+
+const handlePostback = useCallback<MessagingEventHandler>((event) => {
+  console.log('Postback:', event.actionName, event.conversationId)
+}, [])
+useMessagingEvent('postback:add_to_cart', handlePostback)
+```
+
 Event subscription types: `'postback'` (all postbacks, requires elevated review) or `'postback:<actionName>'` (specific postback).
 
 ## SDK Capabilities
@@ -165,7 +191,7 @@ All capabilities are used and declared in `manifest.json`:
 | `data:fetch` | `data.fetch(url, init?)` | Order Takeout (GET), Bring da Check (POST), Lock it In (POST with form state) |
 | `actions:toast` | `actions.toast(payload)` | Multiple buttons — success, info variants |
 | `actions:invoke` | `actions.invoke(action, payload?)` | Ring the Service Bell, Add a Round (`newConversation`) |
-| `extend:identity` | `useIdentityExtend(handler)` | Entry point — enriches JWT claims |
+| `extend:identity` | `useExtendIdentity(handler)` | Entry point — enriches JWT claims |
 | `events:identity` | `useIdentityEvent(type, handler)` | Entry point — logs login/logout events |
 | `events:messaging` | `useMessagingEvent(type, handler)` | Entry point — logs postback button clicks |
 
