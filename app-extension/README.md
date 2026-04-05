@@ -88,8 +88,8 @@ Example:
   "name": "My Extension",
   "version": "1.0.0",
   "targets": ["slot.header", "slot.content"],
-  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke", "events:identity", "extend:identity"],
-  "events": ["identity.login", "identity.logout"],
+  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke", "extend:identity", "events:identity", "events:messaging"],
+  "events": ["identity.login", "identity.logout", "postback:add_to_cart"],
   "allowedDomains": ["api.myservice.com"]
 }
 ```
@@ -139,9 +139,9 @@ useIdentityEvent('identity.login', (event) => {
 Enrich JWT claims before the host signs the identity token. Requires `extend:identity` permission.
 
 ```tsx
-import { useIdentityExtend } from '@stackable-labs/sdk-extension-react'
+import { useExtendIdentity } from '@stackable-labs/sdk-extension-react'
 
-useIdentityExtend((claims) => ({
+useExtendIdentity((claims) => ({
   external_id: `custom_${claims.external_id}`,
 }))
 ```
@@ -154,6 +154,22 @@ Identity state is available in the `context.read()` response as an `identity` fi
 const context = await capabilities.context.read()
 // context.identity → { authenticated, user, expiresAt? }
 ```
+
+## Messaging
+
+### Messaging Events (`events:messaging`)
+
+Subscribe to messaging events (e.g. postback button clicks from Zendesk bots). Requires `events:messaging` permission and matching entries in the manifest `events` array.
+
+```tsx
+import { useMessagingEvent } from '@stackable-labs/sdk-extension-react'
+
+useMessagingEvent('postback:add_to_cart', (event) => {
+  console.log('Postback:', event.actionName, event.conversationId)
+})
+```
+
+Subscription types: `'postback'` (all postbacks, requires elevated review) or `'postback:<actionName>'` (specific postback).
 
 ## Learn More
 
