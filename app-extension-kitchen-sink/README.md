@@ -180,6 +180,23 @@ useMessagingEvent('postback:add_to_cart', handlePostback)
 
 Event subscription types: `'postback'` (all postbacks, requires elevated review) or `'postback:<actionName>'` (specific postback).
 
+> **Note:** Only `postback`-type buttons fire the `postbackButtonClicked` event. The Zendesk bot builder's "Present options" step creates `reply`-type buttons which do **not** trigger this event. Use the [Sunshine Conversations API](https://docs.smooch.io/rest/) to send messages with `{ "type": "postback", "text": "Button Label", "payload": "action_name" }` actions, or use the "Present carousel" step in the bot builder.
+>
+> **Important:** The `actionName` in the event is the button's display **text** (e.g. `"Add to cart"`), NOT the postback `payload` string (e.g. `"add_to_cart"`). The payload is not exposed by the Zendesk Web Widget — it's only available server-side via Sunshine Conversations webhooks. Design your `events` manifest entries to match button text: `"postback:Add to cart"`.
+>
+> To send postback buttons via the Sunshine Conversations API:
+> ```bash
+> # Direct API (requires Sunco API keys from Admin Center → APIs → Conversations API)
+> curl -X POST "https://api.smooch.io/v2/apps/{appId}/conversations/{conversationId}/messages" \
+>   -u '{keyId}:{keySecret}' -H "Content-Type: application/json" \
+>   -d '{"author":{"type":"business"},"content":{"type":"text","text":"Choose:","actions":[{"type":"postback","text":"Add to cart","payload":"add_to_cart"}]}}'
+>
+> # Or via Zendesk proxy (uses Zendesk OAuth or email/token auth — no separate Sunco keys)
+> curl -X POST "https://{subdomain}.zendesk.com/sc/v2/apps/{appId}/conversations/{conversationId}/messages" \
+>   -H "Authorization: Bearer {oauth_token}" -H "Content-Type: application/json" \
+>   -d '{"author":{"type":"business"},"content":{"type":"text","text":"Choose:","actions":[{"type":"postback","text":"Add to cart","payload":"add_to_cart"}]}}'
+> ```
+
 ## SDK Capabilities
 
 All capabilities are used and declared in `manifest.json`:
