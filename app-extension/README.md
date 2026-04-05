@@ -88,7 +88,8 @@ Example:
   "name": "My Extension",
   "version": "1.0.0",
   "targets": ["slot.header", "slot.content"],
-  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke"],
+  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke", "events:identity", "extend:identity"],
+  "events": ["identity.login", "identity.logout"],
   "allowedDomains": ["api.myservice.com"]
 }
 ```
@@ -118,6 +119,41 @@ if (result.ok) {
 ```
 
 Security model: `data.fetch` requests are sent through the platform proxy, which validates the target URL hostname against your extension's `allowedDomains`. Authentication for your backend is owned by the extension developer (for example, by attaching your own auth headers/tokens).
+
+## Identity
+
+### Identity Events (`events:identity`)
+
+Subscribe to real-time identity events (login, logout, refresh, expired) pushed from the host. Requires `events:identity` permission and matching entries in the manifest `events` array.
+
+```tsx
+import { useIdentityEvent } from '@stackable-labs/sdk-extension-react'
+
+useIdentityEvent('identity.login', (event) => {
+  console.log('User logged in:', event.state.user?.email)
+})
+```
+
+### Identity Enrichment (`extend:identity`)
+
+Enrich JWT claims before the host signs the identity token. Requires `extend:identity` permission.
+
+```tsx
+import { useIdentityExtend } from '@stackable-labs/sdk-extension-react'
+
+useIdentityExtend((claims) => ({
+  external_id: `custom_${claims.external_id}`,
+}))
+```
+
+### Identity via Context
+
+Identity state is available in the `context.read()` response as an `identity` field (requires `context:read`, no separate permission):
+
+```tsx
+const context = await capabilities.context.read()
+// context.identity → { authenticated, user, expiresAt? }
+```
 
 ## Learn More
 
