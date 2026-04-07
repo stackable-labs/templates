@@ -88,8 +88,8 @@ Example:
   "name": "My Extension",
   "version": "1.0.0",
   "targets": ["slot.header", "slot.content"],
-  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke", "extend:identity", "events:identity", "events:messaging"],
-  "events": ["identity.login", "identity.logout", "postback:add_to_cart"],
+  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke", "extend:identity", "events:identity", "events:messaging", "events:activity"],
+  "events": ["identity:login", "identity:logout", "messaging:postback:add_to_cart", "activity:product_view"],
   "allowedDomains": ["api.myservice.com"]
 }
 ```
@@ -129,8 +129,8 @@ Subscribe to real-time identity events (login, logout, refresh, expired) pushed 
 ```tsx
 import { useIdentityEvent } from '@stackable-labs/sdk-extension-react'
 
-useIdentityEvent('identity.login', (event) => {
-  console.log('User logged in:', event.state.user?.email)
+useIdentityEvent('login', (event) => {
+  console.log('User logged in:', event.data.state.user?.email)
 })
 ```
 
@@ -178,7 +178,7 @@ Subscribe to messaging events (e.g. postback button clicks from Zendesk bots). R
 import { useMessagingEvent } from '@stackable-labs/sdk-extension-react'
 
 useMessagingEvent('postback:add_to_cart', (event) => {
-  console.log('Postback:', event.actionName, event.conversationId)
+  console.log('Postback:', event.data.actionName, event.data.conversationId)
 })
 ```
 
@@ -190,16 +190,16 @@ import { useMessagingEvent } from '@stackable-labs/sdk-extension-react'
 import type { MessagingEventHandler } from '@stackable-labs/sdk-extension-contracts'
 
 const handlePostback = useCallback<MessagingEventHandler>((event) => {
-  console.log('Postback:', event.actionName, event.conversationId)
+  console.log('Postback:', event.data.actionName, event.data.conversationId)
 }, [])
 useMessagingEvent('postback:add_to_cart', handlePostback)
 ```
 
-Subscription types: `'postback'` (all postbacks, requires elevated review) or `'postback:<actionName>'` (specific postback).
+Subscription types: `'postback'` (all postbacks, requires elevated review/approval) or `'postback:<actionName>'` (specific postback).
 
 > **Note:** Only `postback`-type buttons fire the `postbackButtonClicked` event. The Zendesk bot builder's "Present options" step creates `reply`-type buttons which do **not** trigger this event. Use the [Sunshine Conversations API](https://docs.smooch.io/rest/) to send messages with `{ "type": "postback", "text": "Button Label", "payload": "action_name" }` actions, or use the "Present carousel" step in the bot builder.
 >
-> **Important:** The `actionName` in the event is the button's display **text** (e.g. `"Add to cart"`), NOT the postback `payload` string (e.g. `"add_to_cart"`). The payload is not exposed by the Zendesk Web Widget — it's only available server-side via Sunshine Conversations webhooks. Design your `events` manifest entries to match button text: `"postback:Add to cart"`.
+> **Important:** The `actionName` in the event is the button's display **text** (e.g. `"Add to cart"`), NOT the postback `payload` string (e.g. `"add_to_cart"`). The payload is not exposed by the Zendesk Web Widget — it's only available server-side via Sunshine Conversations webhooks. Design your `events` manifest entries to match button text: `"messaging:postback:Add to cart"`.
 >
 > To send postback buttons via the Sunshine Conversations API:
 > ```bash
@@ -213,6 +213,34 @@ Subscription types: `'postback'` (all postbacks, requires elevated review) or `'
 >   -H "Authorization: Bearer {oauth_token}" -H "Content-Type: application/json" \
 >   -d '{"author":{"type":"business"},"content":{"type":"text","text":"Choose:","actions":[{"type":"postback","text":"Add to cart","payload":"add_to_cart"}]}}'
 > ```
+
+## Activity
+
+### Activity Events (`events:activity`)
+
+Subscribe to host activity events (page views, product views, clicks, etc.). Requires `events:activity` permission and matching entries in the manifest `events` array.
+
+```tsx
+import { useActivityEvent } from '@stackable-labs/sdk-extension-react'
+
+useActivityEvent('product_view', (event) => {
+  console.log('Product viewed:', event.data.productId)
+})
+```
+
+With `useCallback` (for memoized handlers):
+```tsx
+import { useCallback } from 'react'
+import { useActivityEvent } from '@stackable-labs/sdk-extension-react'
+import type { ActivityEventHandler } from '@stackable-labs/sdk-extension-contracts'
+
+const handleActivity = useCallback<ActivityEventHandler>((event) => {
+  console.log('Product viewed:', event.data.productId)
+}, [])
+useActivityEvent('product_view', handleActivity)
+```
+
+Event types: any string (domain-stripped). Well-known names: `'page_view'`, `'click'`, `'product_view'`, `'add_to_cart'`, `'purchase'`, `'search'`, `'form_submit'`. Use `'*'` to receive all activity events.
 
 ## Learn More
 
