@@ -74,7 +74,11 @@ export function Content() {
 
   const handleInvokeExample = async () => {
     try {
-      await actions.invoke('newConversation', { source: 'kitchen-sink-demo' })
+      await actions.invoke('newConversation', {
+        tags: ['stackable', 'kitchen-sink'],
+        fields: [{ id: 'source', value: 'kitchen-sink-demo' }],
+        metadata: { source: 'kitchen-sink-demo' },
+      })
       actions.toast({ message: 'Chef fired actions.invoke AND actions.toast in one go. Two capabilities, one click...$30 straight to the head.', type: 'success' })
     } catch {
       actions.toast({ message: 'actions.invoke demo — the host would handle this action in production.', type: 'info' })

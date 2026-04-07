@@ -235,7 +235,7 @@ All capabilities are used and declared in `manifest.json`:
 | `data:query` | `data.query()` | Declared in manifest (available for extensions to use) |
 | `data:fetch` | `data.fetch(url, init?)` | Order Takeout (GET), Bring da Check (POST), Lock it In (POST with form state) |
 | `actions:toast` | `actions.toast(payload)` | Multiple buttons — success, info variants |
-| `actions:invoke` | `actions.invoke(action, payload?)` | Ring the Service Bell, Add a Round (`newConversation`) |
+| `actions:invoke` | `actions.invoke(action, payload?)` | Ring the Service Bell, Add a Round (`newConversation` with tags/fields), `setConversationTags`, `setConversationFields` |
 | `extend:identity` | `useExtendIdentity(handler)` | Entry point — enriches JWT claims |
 | `events:identity` | `useIdentityEvent(type, handler)` | Entry point — logs login/logout events |
 | `events:messaging` | `useMessagingEvent(type, handler)` | Entry point — logs postback button clicks |
