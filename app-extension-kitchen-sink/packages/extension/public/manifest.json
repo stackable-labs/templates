@@ -2,7 +2,7 @@
   "name": "__EXTENSION_DISPLAY_NAME__",
   "version": "1.0.0",
   "targets": ["slot.header", "slot.content", "slot.footer", "slot.footer-links"],
-  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke", "events:identity", "events:messaging", "extend:identity"],
-  "events": ["identity.login", "identity.logout", "postback:add_to_cart"],
+  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke", "events:identity", "events:messaging", "events:activity", "extend:identity"],
+  "events": ["identity:login", "identity:logout", "messaging:postback:add_to_cart", "activity:product_view"],
   "allowedDomains": ["jsonplaceholder.typicode.com"]
 }

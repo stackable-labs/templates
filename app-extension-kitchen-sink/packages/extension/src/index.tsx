@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { createExtension, useIdentityEvent, useExtendIdentity, useMessagingEvent } from '@stackable-labs/sdk-extension-react'
+import { createExtension, useIdentityEvent, useExtendIdentity, useMessagingEvent, useActivityEvent } from '@stackable-labs/sdk-extension-react'
 import type { ExtendIdentityHandler } from '@stackable-labs/sdk-extension-contracts'
 import { Header } from './surfaces/Header'
 import { Content } from './surfaces/Content'
@@ -7,17 +7,22 @@ import { Footer } from './surfaces/Footer'
 
 const Extension = () => {
   // Identity events — react to login/logout
-  useIdentityEvent('identity.login', (event) => {
-    console.log('[kitchen-sink] User logged in:', event.state.user?.email)
+  useIdentityEvent('login', (event) => {
+    console.log('[kitchen-sink] User logged in:', event.data.state.user?.email)
   })
 
-  useIdentityEvent('identity.logout', () => {
+  useIdentityEvent('logout', () => {
     console.log('[kitchen-sink] User logged out')
   })
 
   // Messaging events — react to postback button clicks
   useMessagingEvent('postback:add_to_cart', (event) => {
-    console.log('[kitchen-sink] Postback:', event.actionName, event.conversationId)
+    console.log('[kitchen-sink] Postback:', event.data.actionName, event.data.conversationId)
+  })
+
+  // Activity events — react to host activity (e.g., product views, page navigation)
+  useActivityEvent('product_view', (event) => {
+    console.log('[kitchen-sink] Product viewed:', event.data.productId)
   })
 
   // Identity enrichment — add claims to the JWT before signing
