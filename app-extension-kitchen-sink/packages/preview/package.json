@@ -1,7 +1,7 @@
 {
   "name": "local-preview-host",
-  "private": true,
   "type": "module",
+  "private": true,
   "scripts": {
     "dev": "sleep 2 && vite"
   },
