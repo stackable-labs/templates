@@ -16,11 +16,12 @@ skills/
 .claude/
 .cursor/
 .windsurf/
-.github/instructions/
-.github/copilot-instructions.md
 .gemini/
 .agent/
 .codex/
+.github/
+.vscode/
+.mcp.json
 CLAUDE.md
 GEMINI.md
 AGENTS.md
