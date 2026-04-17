@@ -80,6 +80,7 @@ pnpm --config.dlx-cache-max-age=0 dlx @stackable-labs/cli-app-extension ai scaff
 - **`allowedDomains`** — Hostname allowlist for `data.fetch` egress, e.g. `["api.myservice.com"]`.
   - Use hostnames only (no protocol/path).
   - Default is an empty array (`[]`), which allows no external fetch targets.
+- **`settingsSchema`** — Optional array of configurable fields that instance owners fill in per-installation. Supports `text`, `textarea`, `email`, `number`, `select`, `radio`, and `toggle` field types. Fields with `"secret": true` are encrypted at rest and injected server-side via `{{settings.xxx}}` placeholders in `data.fetch` headers — they never enter extension code.
 
 Example:
 
@@ -90,7 +91,14 @@ Example:
   "targets": ["slot.header", "slot.content"],
   "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke", "extend:identity", "events:identity", "events:messaging", "events:activity"],
   "events": ["identity:login", "identity:logout", "messaging:postback:add_to_cart", "activity:product_view"],
-  "allowedDomains": ["api.myservice.com"]
+  "allowedDomains": ["api.myservice.com"],
+  "settingsSchema": [
+    { "identifier": "apiKey", "label": "API Key", "type": "text", "secret": true, "required": true },
+    { "identifier": "environmentType", "label": "Environment", "type": "select", "options": [
+      { "label": "Production", "value": "prod" },
+      { "label": "Sandbox", "value": "sandbox" }
+    ]}
+  ]
 }
 ```
 
@@ -118,7 +126,33 @@ if (result.ok) {
 }
 ```
 
-Security model: `data.fetch` requests are sent through the platform proxy, which validates the target URL hostname against your extension's `allowedDomains`. Authentication for your backend is owned by the extension developer (for example, by attaching your own auth headers/tokens).
+Security model: `data.fetch` requests are sent through the platform proxy, which validates the target URL hostname against your extension's `allowedDomains`.
+
+### Secret injection via placeholders
+
+For API keys and tokens, use `{{settings.xxx}}` placeholders in header values. The proxy resolves them server-side — **the real secret never enters extension code**.
+
+```tsx
+const result = await data.fetch('https://api.myservice.com/orders', {
+  headers: {
+    'X-API-Key': '{{settings.apiKey}}',
+    'Authorization': 'Bearer {{settings.token}}',
+  },
+})
+```
+
+### Reading non-secret settings
+
+Non-secret settings are available via `useSettings()` or `useContextData()`:
+
+```tsx
+import { useSettings } from '@stackable-labs/sdk-extension-react'
+
+const settings = useSettings()
+const env = settings.environmentType as string // 'prod' or 'sandbox'
+```
+
+Settings propagate on page load — changes made in the admin dashboard take effect on the next page reload.
 
 ## Identity
 

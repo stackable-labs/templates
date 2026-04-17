@@ -35,19 +35,33 @@ export function createApi(query: QueryFn) {
 }
 
 // ── data.fetch wrapper ──────────────────────────────────────────────────────
+//
+// For API keys and secrets, use {{settings.xxx}} placeholders in headers.
+// The proxy resolves them server-side — the real secret never enters extension code.
+// Declare secret fields in manifest.json settingsSchema with "secret": true.
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL as string
 
 export function createFetchApi(fetch: FetchFn) {
   return {
     async getItems(): Promise<unknown[]> {
-      const result = await fetch(`${API_BASE_URL}/items`, { method: 'GET' })
+      const result = await fetch(`${API_BASE_URL}/items`, {
+        method: 'GET',
+        headers: {
+          'X-API-Key': '{{settings.apiKey}}',
+        },
+      })
       if (!result.ok) throw new Error(`getItems failed: ${result.status}`)
       return result.data as unknown[]
     },
 
     async getItem(itemId: string): Promise<unknown> {
-      const result = await fetch(`${API_BASE_URL}/items/${itemId}`, { method: 'GET' })
+      const result = await fetch(`${API_BASE_URL}/items/${itemId}`, {
+        method: 'GET',
+        headers: {
+          'X-API-Key': '{{settings.apiKey}}',
+        },
+      })
       if (!result.ok) throw new Error(`getItem failed: ${result.status}`)
       return result.data as unknown
     },
