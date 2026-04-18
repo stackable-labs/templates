@@ -9,9 +9,15 @@ type DataCapabilities = {
   query: <T = unknown>(payload: { endpoint: string; params?: Record<string, string> }) => Promise<T>
 }
 
-/** Example: fetch a REST API endpoint via data.fetch (proxied through host) */
+/**
+ * Example: fetch a REST API endpoint via data.fetch (proxied through host).
+ * Secret settings (e.g. apiKey) are injected server-side via {{settings.xxx}} placeholders —
+ * the real value never enters extension code.
+ */
 export const fetchOrder = async (data: DataCapabilities, orderId: string): Promise<FetchResponse> =>
-  data.fetch(`https://api.example.com/orders/${orderId}`)
+  data.fetch(`https://api.example.com/orders/${orderId}`, {
+    headers: { 'X-API-Key': '{{settings.apiKey}}' },
+  })
 
 /** Example: query backend data via data.query (host-mediated) */
 export const queryCustomer = async <T = unknown>(data: DataCapabilities, customerId: string): Promise<T> =>

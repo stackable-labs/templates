@@ -1,8 +1,9 @@
-import { ui, Surface, useContextData, useCapabilities, useStore } from '@stackable-labs/sdk-extension-react'
+import { ui, Surface, useContextData, useCapabilities, useSettings, useStore } from '@stackable-labs/sdk-extension-react'
 import { appStore } from '../store'
 
 export function Content() {
   const { loading } = useContextData()
+  const settings = useSettings() // Non-secret settings from settingsSchema
   const { data, actions } = useCapabilities()
   const name = useStore(appStore, (s) => s.name)
   const dietaryNotes = useStore(appStore, (s) => s.dietaryNotes)
