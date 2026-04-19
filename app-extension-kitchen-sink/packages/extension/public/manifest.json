@@ -6,7 +6,7 @@
   "events": ["identity:login", "identity:logout", "messaging:postback:add_to_cart", "activity:product_view"],
   "allowedDomains": ["jsonplaceholder.typicode.com"],
   "settingsSchema": [
-    { "identifier": "apiEndpoint", "label": "API Endpoint", "type": "text", "placeholder": "https://api.example.com" },
+    { "identifier": "apiEndpoint", "label": "API Endpoint", "type": "text", "placeholder": "https://jsonplaceholder.typicode.com" },
     { "identifier": "apiKey", "label": "API Key", "type": "text", "secret": true, "required": true }
   ]
 }

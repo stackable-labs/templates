@@ -12,11 +12,12 @@ type DataCapabilities = {
 /**
  * Example: fetch a REST API endpoint via data.fetch (proxied through host).
  * Secret settings (e.g. apiKey) are injected server-side via {{settings.xxx}} placeholders —
- * the real value never enters extension code.
+ * the real value never enters extension code. Non-secret settings (e.g. apiEndpoint)
+ * are available client-side via useSettings() and can be passed in directly.
  */
-export const fetchOrder = async (data: DataCapabilities, orderId: string): Promise<FetchResponse> =>
-  data.fetch(`https://api.example.com/orders/${orderId}`, {
-    headers: { 'X-API-Key': '{{settings.apiKey}}' },
+export const fetchOrder = async (data: DataCapabilities, apiEndpoint: string, orderId: string): Promise<FetchResponse> =>
+  data.fetch(`${apiEndpoint}/orders/${orderId}`, {
+    headers: { 'X-Sample-API-Key': '{{settings.apiKey}}' },
   })
 
 /** Example: query backend data via data.query (host-mediated) */

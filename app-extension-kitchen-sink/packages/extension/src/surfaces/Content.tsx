@@ -3,7 +3,8 @@ import { appStore } from '../store'
 
 export function Content() {
   const { loading } = useContextData()
-  const settings = useSettings() // Non-secret settings from settingsSchema
+  const settings = useSettings() // Non-secret settings (e.g. apiEndpoint) from settingsSchema
+  const apiEndpoint = (settings.apiEndpoint as string) || 'https://jsonplaceholder.typicode.com'
   const { data, actions } = useCapabilities()
   const name = useStore(appStore, (s) => s.name)
   const dietaryNotes = useStore(appStore, (s) => s.dietaryNotes)
@@ -28,7 +29,7 @@ export function Content() {
 
   const handleFetchGet = async () => {
     try {
-      const result = await data.fetch('https://jsonplaceholder.typicode.com/todos/1')
+      const result = await data.fetch(`${apiEndpoint}/todos/1`)
       actions.toast({ message: `GET returned status ${result.status}. The proxy works!`, type: 'success', position: 'top-center', closeButton: true })
     } catch {
       actions.toast({ message: 'data.fetch GET demo — requires the data:fetch permission in the host.', type: 'info' })
@@ -44,7 +45,7 @@ export function Content() {
   const handleFetchPost = async () => {
     const total = appStore.get().billTotal
     try {
-      const result = await data.fetch('https://jsonplaceholder.typicode.com/posts', {
+      const result = await data.fetch(`${apiEndpoint}/posts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: { title: 'Another round', body: 'From the kitchen sink', userId: 1 },
@@ -59,7 +60,7 @@ export function Content() {
     const state = appStore.get()
     actions.toast({
       fetch: {
-        url: 'https://jsonplaceholder.typicode.com/posts',
+        url: `${apiEndpoint}/posts`,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: state,
