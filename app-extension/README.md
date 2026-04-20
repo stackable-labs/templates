@@ -56,6 +56,17 @@ See the [CLI docs](https://www.npmjs.com/package/@stackable-labs/cli-app-extensi
 
 This project includes [Agent Skills](https://agentskills.io) — SDK reference and guided workflows that AI coding assistants (Claude Code, Cursor, Windsurf, and 40+ others) can use to help you build extensions.
 
+### Claude Code Plugin (recommended)
+
+Install the **Stackable Extension Dev** plugin for always-up-to-date skills and live platform API access:
+
+```bash
+/plugin marketplace add stackable-labs/claude-plugins
+/plugin install stackable-extension-dev@stackable-claude-plugins
+```
+
+### Local files (all editors)
+
 Skills are included automatically when you scaffold a new project. To update them to the latest version:
 
 ```bash
@@ -67,6 +78,8 @@ For platform-specific AI editor configs (`.claude/`, `.cursor/`, `.windsurf/`, e
 ```bash
 pnpm --config.dlx-cache-max-age=0 dlx @stackable-labs/cli-app-extension ai scaffold
 ```
+
+> When run inside Claude Code, `ai scaffold` auto-detects and offers the plugin setup path.
 
 ## Configuration
 
