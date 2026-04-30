@@ -169,6 +169,28 @@ export function Content() {
               </ui.CollapsibleContent>
             </ui.Collapsible>
 
+            <ui.Card>
+              <ui.CardHeader>
+                <ui.Heading level="3">Reserve Your Table</ui.Heading>
+              </ui.CardHeader>
+              <ui.CardContent className="pb-6">
+                <ui.Inline gap="3" align="center">
+                  <ui.QRCode
+                    value="https://stackablelabs.com/reserve"
+                    size="md"
+                    level="medium"
+                    alt="Scan to reserve a table"
+                  />
+                  <ui.Stack direction="column" gap="1" className="flex-1">
+                    <ui.Text className="font-medium">Scan to reserve</ui.Text>
+                    <ui.Text tone="muted" className="text-xs">
+                      Point your phone at the code — works on the kitchen sink, your phone, or both.
+                    </ui.Text>
+                  </ui.Stack>
+                </ui.Inline>
+              </ui.CardContent>
+            </ui.Card>
+
             <ui.Inline gap="2" className="justify-end">
               <ui.Button variant="outline" onClick={handleAddRound}>
                 Add a Round
