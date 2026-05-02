@@ -176,7 +176,7 @@ export function Content() {
               <ui.CardContent className="pb-6">
                 <ui.Inline gap="3" align="center">
                   <ui.QRCode
-                    value="https://stackablelabs.com/reserve"
+                    value="https://github.com/stackable-labs"
                     size="md"
                     level="medium"
                     alt="Scan to reserve a table"
