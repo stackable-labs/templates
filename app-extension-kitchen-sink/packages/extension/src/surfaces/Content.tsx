@@ -169,6 +169,17 @@ export function Content() {
               </ui.CollapsibleContent>
             </ui.Collapsible>
 
+            <ui.Collapsible>
+              <ui.CollapsibleTrigger>
+                <ui.Button variant="outline">
+                  <ui.Icon name="circle-play" size="sm" /> Watch our story
+                </ui.Button>
+              </ui.CollapsibleTrigger>
+              <ui.CollapsibleContent>
+                <ui.Video videoId="3_VhE3GGkOo" title="Our story" autoPlay={false} showControls={true} />
+              </ui.CollapsibleContent>
+            </ui.Collapsible>
+
             <ui.Card>
               <ui.CardHeader>
                 <ui.Heading level="3">Reserve Your Table</ui.Heading>
