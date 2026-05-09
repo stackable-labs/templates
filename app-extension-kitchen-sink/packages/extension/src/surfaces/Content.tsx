@@ -126,6 +126,11 @@ export function Content() {
 
         <ui.TabsContent value="details">
           <ui.Stack direction="column" gap="3">
+            <ui.Image
+              alt="Restaurant interior"
+              src="https://placehold.co/300x150/png?text=The+Spread"
+              className="w-full rounded-md object-cover"
+            />
             <ui.Card>
               <ui.CardHeader>
                 <ui.Inline gap="2" className="justify-between">
