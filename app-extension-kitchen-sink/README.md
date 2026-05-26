@@ -16,6 +16,38 @@ packages/extension/src/
     Footer.tsx       # slot.footer + slot.footer-links — text and external links
 ```
 
+## Getting Started
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start development servers (extension + preview)
+pnpm dev
+```
+
+This starts two dev servers:
+- **Extension** — `http://localhost:6543` (configured via `VITE_EXTENSION_PORT`)
+- **Preview host** — `http://localhost:6544` (configured via `VITE_PREVIEW_PORT`)
+
+The preview host loads your extension in an iframe sandbox, simulating how it will run in production.
+
+## Development
+
+Edit files in `packages/extension/src/` — changes hot-reload automatically.
+
+Each file in `packages/extension/src/surfaces/` corresponds to a target slot defined in `manifest.json`. The extension entry point (`index.tsx`) registers surfaces for each target.
+
+### Preview with tunnels
+
+```bash
+pnpm preview
+```
+
+Runs the full CLI dev experience — starts Vite dev servers, opens Cloudflare tunnels, and displays a **Host App Query Param** you can append to your deployed host app URL to test the extension in your real environment. No database changes are made; each developer gets isolated overrides via their own browser session.
+
+See the [CLI docs](https://www.npmjs.com/package/@stackable-labs/cli-app-extension) for details.
+
 ## Surfaces & Components
 
 ### Header (`slot.header`)
