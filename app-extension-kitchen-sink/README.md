@@ -162,9 +162,9 @@ useIdentityEvent('logout', () => {
 
 Event types: `'login' | 'logout' | 'refresh' | 'expired'`
 
-### Identity Enrichment (`extend:identity`)
+### Identity Enrichment (`identity:extend`)
 
-Enrich JWT claims before the host signs the identity token. Requires `extend:identity` permission.
+Enrich JWT claims before the host signs the identity token. Requires `identity:extend` permission.
 
 ```tsx
 import { useExtendIdentity } from '@stackable-labs/sdk-extension-react'
@@ -281,7 +281,7 @@ All capabilities are used and declared in `manifest.json`:
 | `data:fetch` | `data.fetch(url, init?)` | Order Takeout (GET), Bring da Check (POST), Lock it In (POST with form state) |
 | `actions:toast` | `actions.toast(payload)` | Multiple buttons — success, info variants |
 | `actions:invoke` | `actions.invoke(action, payload?)` | Ring the Service Bell, Add a Round (`newConversation` with tags/fields), `setConversationTags`, `setConversationFields` |
-| `extend:identity` | `useExtendIdentity(handler)` | Entry point — enriches JWT claims |
+| `identity:extend` | `useExtendIdentity(handler)` | Entry point — enriches JWT claims |
 | `events:identity` | `useIdentityEvent(type, handler)` | Entry point — logs login/logout events |
 | `events:messaging` | `useMessagingEvent(type, handler)` | Entry point — logs postback button clicks |
 | `events:activity` | `useActivityEvent(type, handler)` | Entry point — logs host activity events |
