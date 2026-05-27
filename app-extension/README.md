@@ -102,7 +102,7 @@ Example:
   "name": "My Extension",
   "version": "1.0.0",
   "targets": ["slot.header", "slot.content"],
-  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke", "extend:identity", "events:identity", "events:messaging", "events:activity"],
+  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke", "identity:extend", "events:identity", "events:messaging", "events:activity"],
   "events": ["identity:login", "identity:logout", "messaging:postback:add_to_cart", "activity:product_view"],
   "allowedDomains": ["api.myservice.com"],
   "settingsSchema": [
@@ -181,9 +181,9 @@ useIdentityEvent('login', (event) => {
 })
 ```
 
-### Identity Enrichment (`extend:identity`)
+### Identity Enrichment (`identity:extend`)
 
-Enrich JWT claims before the host signs the identity token. Requires `extend:identity` permission.
+Enrich JWT claims before the host signs the identity token. Requires `identity:extend` permission.
 
 ```tsx
 import { useExtendIdentity } from '@stackable-labs/sdk-extension-react'
