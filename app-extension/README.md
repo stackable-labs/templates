@@ -102,7 +102,7 @@ Example:
   "name": "My Extension",
   "version": "1.0.0",
   "targets": ["slot.header", "slot.content"],
-  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke", "identity:extend", "events:identity", "events:messaging", "events:activity"],
+  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke", "identity:extend", "messaging:send", "events:identity", "events:messaging", "events:activity"],
   "events": ["identity:login", "identity:logout", "messaging:postback:add_to_cart", "activity:product_view"],
   "allowedDomains": ["api.myservice.com"],
   "settingsSchema": [
