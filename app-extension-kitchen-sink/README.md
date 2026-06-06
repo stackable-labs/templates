@@ -282,6 +282,7 @@ All capabilities are used and declared in `manifest.json`:
 | `actions:toast` | `actions.toast(payload)` | Multiple buttons — success, info variants |
 | `actions:invoke` | `actions.invoke(action, payload?)` | Ring the Service Bell, Add a Round (`newConversation` with tags/fields), `setConversationTags`, `setConversationFields` |
 | `identity:extend` | `useExtendIdentity(handler)` | Entry point — enriches JWT claims |
+| `messaging:send` | `useMessaging()` | Send from the Chef — drops a chef-message into the active conversation |
 | `events:identity` | `useIdentityEvent(type, handler)` | Entry point — logs login/logout events |
 | `events:messaging` | `useMessagingEvent(type, handler)` | Entry point — logs postback button clicks |
 | `events:activity` | `useActivityEvent(type, handler)` | Entry point — logs host activity events |
@@ -291,9 +292,10 @@ All capabilities are used and declared in `manifest.json`:
 | Hook | Where Used |
 |---|---|
 | `useContextData()` | Header + Content — provides `loading` flag and context data |
-| `useCapabilities()` | Content — returns `{ data, actions, extend }` for calling capabilities |
+| `useCapabilities()` | Content — returns `{ data, actions, context, identity, messaging }` for calling capabilities |
 | `useStore(store, selector)` | Content — subscribes to `appStore` slices for controlled form fields |
 | `useExtendIdentity(handler)` | Entry point — enriches identity JWT claims before signing |
+| `useMessaging()` | Content — sends messages into the active conversation |
 | `useIdentityEvent(type, handler)` | Entry point — subscribes to identity login/logout events |
 | `useMessagingEvent(type, handler)` | Entry point — subscribes to messaging postback events |
 | `useActivityEvent(type, handler)` | Entry point — subscribes to host activity events |

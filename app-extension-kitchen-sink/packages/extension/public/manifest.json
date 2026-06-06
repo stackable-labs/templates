@@ -2,7 +2,7 @@
   "name": "__EXTENSION_DISPLAY_NAME__",
   "version": "1.0.0",
   "targets": ["slot.header", "slot.content", "slot.footer", "slot.footer-links"],
-  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke", "events:identity", "events:messaging", "events:activity", "identity:extend"],
+  "permissions": ["context:read", "data:query", "data:fetch", "actions:toast", "actions:invoke", "events:identity", "events:messaging", "events:activity", "identity:extend", "messaging:send"],
   "events": ["identity:login", "identity:logout", "identity:refresh", "messaging:postback:add_to_cart", "activity:product_view"],
   "identityClaims": ["reservation_status", "chef_rating", "chef_endorsed"],
   "allowedDomains": ["jsonplaceholder.typicode.com"],

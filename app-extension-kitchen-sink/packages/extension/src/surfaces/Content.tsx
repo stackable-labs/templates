@@ -1,11 +1,13 @@
-import { ui, Surface, useContextData, useCapabilities, useSettings, useStore } from '@stackable-labs/sdk-extension-react'
+import { ui, Surface, useContextData, useCapabilities, useMessaging, useSettings, useStore } from '@stackable-labs/sdk-extension-react'
 import { appStore } from '../store'
 
 export function Content() {
   const { loading } = useContextData()
-  const settings = useSettings() // Non-secret settings (e.g. apiEndpoint) from settingsSchema
-  const apiEndpoint = (settings.apiEndpoint as string) || 'https://jsonplaceholder.typicode.com'
+  const [sendMessage, { loading: isSendingMessage }] = useMessaging()
   const { data, actions } = useCapabilities()
+  const settings = useSettings()
+  const apiEndpoint = (settings.apiEndpoint as string) || 'https://jsonplaceholder.typicode.com'
+
   const name = useStore(appStore, (s) => s.name)
   const dietaryNotes = useStore(appStore, (s) => s.dietaryNotes)
   const occasion = useStore(appStore, (s) => s.occasion)
@@ -74,6 +76,22 @@ export function Content() {
     })
   }
 
+  const handleSendChefMessage = async () => {
+    try {
+      await sendMessage({
+        kind: 'text',
+        body: "Order up! Chef's compliments — here are tonight's specials.",
+        actions: [
+          { type: 'reply', label: 'Sounds great', payload: 'CHEF_YES' },
+          { type: 'reply', label: 'Maybe later', payload: 'CHEF_NO' },
+        ],
+      })
+      actions.toast({ message: 'Message sent from the chef!', type: 'success' })
+    } catch {
+      actions.toast({ message: 'messaging.send demo — requires the messaging:send permission and an active conversation.', type: 'info' })
+    }
+  }
+
   const handleInvokeExample = async () => {
     try {
       await actions.invoke('newConversation', {
@@ -115,6 +133,13 @@ export function Content() {
               label="Order Takeout"
               description="data.fetch — send a secure HTTP request...to the moon!"
               onClick={handleFetchGet}
+            />
+            <ui.MenuItem
+              icon="message-circle"
+              label="Send from the Chef"
+              description="messaging.send — drop a message straight into the active conversation"
+              onClick={handleSendChefMessage}
+              disabled={isSendingMessage}
             />
           </ui.Menu>
           <ui.Stack direction="column" gap="2" className="pt-3">
