@@ -15,9 +15,12 @@ package-lock.json
 skills/
 .claude/
 .cursor/
+.devin/
 .windsurf/
 .gemini/
 .agent/
+.agents/
+.antigravity/
 .codex/
 .github/
 .vscode/
